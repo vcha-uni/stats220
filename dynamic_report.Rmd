@@ -9,7 +9,7 @@ library(tidyverse)
 
 ```
 
-```{css}
+```{css, echo=FALSE}
 * {
   background-color: #ECF0F1;
   color: #2C3E50;
