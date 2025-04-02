@@ -1,0 +1,166 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+library(tidyverse)
+
+```
+
+```{css}
+* {
+  background-color: #ECF0F1;
+  color: #2C3E50;
+}
+
+h2, h3 {
+  text-align: center;
+  border-radius: 15px;
+  border: 10px solid transparent;
+  background-image: linear-gradient(45deg, #2C3E50,  #2C3E20);
+  color: #ECF0F1;
+  background-origin: border-box;
+  padding: 8px;
+  font-family: 
+}
+
+p {
+  font-family: 'EB Garamond';
+}
+
+
+```
+
+## A User’s Experience with YouTube Ads: Targeting and Engagement
+
+### Purpose of Report
+I am conducting an analysis of YouTube advertisements targeted to the general audience, specifically focusing on users who are logged out to eliminate the influence of personalized ads. The study aims to identify the types of ads most commonly displayed to these users and assess their appeal by examining preferences between skippable and non-skippable ads, as well as evaluating the frequency of ad repetitions.
+
+To collected data, I created a google form consisting primarily of quantitative questions, using dropdown lists and multiple-choice options for data analysis. An open-ended question was also included, asking users to specify the number of seconds they typically watch an ad before skipping, providing a measure of ad engagement.
+
+
+### Summary Values
+```{r}
+# CSV file
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNSf-E6x3TKMhW4j4eNW0BXhin2D6T54K4X1mUYvScJK5-FFYXVKd_vFPABoyrsiPYfnaOtwTYOjr/pub?gid=1688869716&single=true&output=csv"
+
+# Reading the CSV file and assigning it to logged_data
+logged_data <- read_csv(csv_file)
+
+# Renaming the variables of data frame and assigning it to a new 
+latest_data <- logged_data %>%
+  rename(ad_category = 2,
+         seconds_watched = 3,
+         is_ad_seen_before = 4,
+         ad_format = 5,
+         is_ad_of_interest = 6,
+         ad_reaction_rating = 7
+        ) 
+
+# As the values in ad_category were too long, I had to search up how to remove the parenthesis and it is done using the mutate & gsub functions
+latest_data <- latest_data %>%
+  mutate(ad_category = gsub("\\s*\\(.*\\)", "", ad_category))
+
+# Summary value for average ad rating
+average_ad_rating <- latest_data$ad_reaction_rating %>% mean() %>% round(0)
+
+# Summary value for interest of ad
+average_interest_of_ad <- latest_data$is_ad_of_interest %>% mean() %>% round(0)
+```
+The average rating reaction of Youtube ads were `r average_ad_rating` (1: Very annoying, 2: Somewhat annoying, 3: Neutral, 4: Somewhat enjoyable, 5: Very enjoyable). This makes sense as many users would view ads interruptions that delay access to the video they want to watch and consequently, this leads to frustration and inconvenience
+
+The average of ad interest rating where 1 = Yes, 2 = Somewhat relevant and 3 = No, was `r average_interest_of_ad`. this summary value aligns with expectations as the user is logged out and hence, the YouTube algorithm cannot create personalized ads based on their viewing history, leading to a broader range of ads that may not closely match individual interests.
+
+
+
+
+```{r}
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNSf-E6x3TKMhW4j4eNW0BXhin2D6T54K4X1mUYvScJK5-FFYXVKd_vFPABoyrsiPYfnaOtwTYOjr/pub?gid=1688869716&single=true&output=csv"
+
+logged_data <- read_csv(csv_file)
+
+latest_data <- logged_data %>%
+  rename(ad_category = 2,
+         seconds_watched = 3,
+         is_ad_seen_before = 4,
+         ad_format = 5,
+         is_ad_of_interest = 6,
+         ad_reaction_rating = 7
+        ) 
+```
+
+
+### Impact of Ad Repetition on Viewer Annoyance - Bar Chart
+
+```{r fig.width = 10}
+# CSV file
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNSf-E6x3TKMhW4j4eNW0BXhin2D6T54K4X1mUYvScJK5-FFYXVKd_vFPABoyrsiPYfnaOtwTYOjr/pub?gid=1688869716&single=true&output=csv"
+
+# Reading the CSV file and assigning it to logged_data
+logged_data <- read_csv(csv_file)
+
+# Renaming the variables of data frame and assigning it to a new 
+latest_data <- logged_data %>%
+  rename(ad_category = 2,
+         seconds_watched = 3,
+         is_ad_seen_before = 4,
+         ad_format = 5,
+         is_ad_of_interest = 6,
+         ad_reaction_rating = 7
+        ) 
+
+# As the values in ad_category were too long, I had to search up how to remove the parenthesis and it is done using the mutate & gsub functions
+latest_data <- latest_data %>%
+  mutate(ad_category = gsub("\\s*\\(.*\\)", "", ad_category))
+
+graph1 <- ggplot(data = latest_data) + geom_bar(aes(x = ad_reaction_rating, fill = is_ad_seen_before)) + 
+  labs(title = "Are repetitve ads annoying and less appealing?",
+       subititle = "Comparing ad reactions with ad seen before for ads",
+       caption = "Source: Google Forms",
+       x = "Ad rating \n(1: Very annoying, 2: Somewhat annoying, 3: Neutral, 4: Somewhat enjoyable,
+       5: Very enjoyable)",
+       y = "Number of ads")
+
+graph1
+```
+
+As shown by the graph above, the most enjoyable ads which are categorised under 4 (somewhat enjoyable) are all ads that are not seen before. This suggests that ads which are not seen before are more likely to be more enjoyable by a user compared to ads which have been seen before by the user. Therefore, introducing new and unique advertisements may be good approach to engage users and increase user enjoyment
+
+
+### Which Kind of Advertisements are Shown To The General Audience The Most?
+```{r fig.width = 10}
+# CSV file
+csv_file <- "https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNSf-E6x3TKMhW4j4eNW0BXhin2D6T54K4X1mUYvScJK5-FFYXVKd_vFPABoyrsiPYfnaOtwTYOjr/pub?gid=1688869716&single=true&output=csv"
+
+# Reading the CSV file and assigning it to logged_data
+logged_data <- read_csv(csv_file)
+
+# Renaming the variables of data frame and assigning it to a new 
+latest_data <- logged_data %>%
+  rename(ad_category = 2,
+         seconds_watched = 3,
+         is_ad_seen_before = 4,
+         ad_format = 5,
+         is_ad_of_interest = 6,
+         ad_reaction_rating = 7
+        ) 
+
+# As the values in ad_category were too long, I had to search up how to remove the parenthesis and it is done using the mutate & gsub functions
+latest_data <- latest_data %>%
+  mutate(ad_category = gsub("\\s*\\(.*\\)", "", ad_category))
+
+graph2 <- ggplot(data = latest_data) + geom_bar(aes(y = ad_category)) + 
+  labs(title = "Which type of ad are targetted to the general audience the most?",
+       subititle = "subtitle",
+       caption = "Source: Google Forms",
+       x = "Number of ads",
+       y = "Type of ad") 
+graph2
+```
+
+As per the graph above, the most targeted ads shown to the general audience are Educational advertisements. This may be because YouTube's user base are predominantly among younger demographics.  Hence, advertisements from companies like Grammarly or online courses are frequently displayed, catering to the platform's predominantly younger audience.
+
+
+
