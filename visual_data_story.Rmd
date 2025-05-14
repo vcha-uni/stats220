@@ -1,0 +1,120 @@
+---
+title: "Exploring User Experience with YouTube Advertisements"
+author: "Venus Chandra"
+output: html_document
+---
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+```
+
+
+```{css}
+
+* {
+  background-color: #fff7fa;
+}
+
+.figcaption{
+  font-size: 10px;
+}
+
+.title, .subtitle, .author {
+  text-align: center;
+  color: #7D5BA6;             /* matches plot title/subtitle */
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.title {
+    border-radius: 1px;
+    padding: 15px;
+    background-image: url('https://images.pexels.com/photos/7130555/pexels-photo-7130555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'); /* Image from pexels */
+    background-repeat: repeat; 
+    background-size: cover;
+    
+    text-shadow: 0 0 20px #2C3E50; 
+}
+
+
+h1, h2 {
+  background-size: cover;
+  background-position: top left;
+  color: #7D5BA6;     
+  font-family: "Georgia", "Times New Roman", serif;                
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #eae2f2;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h16v2h-6v6h6v8H8v-6H2v6H0V0zm4 4h2v2H4V4zm8 8h2v2h-2v-2zm-8 0h2v2H4v-2zm8-8h2v2h-2V4z' fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+   /* Image from Hero Patterns */
+  background-repeat: repeat;        
+  background-size: 16px 16px;  
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+
+
+}
+
+body {
+  background-color: #fdf7ff;  /* matches plot background */
+  color: #4a4a4a;             /* soft grey for body text for good readability 
+
+p {
+  color: #4a4a4a;             /* standard body text color */
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+```
+
+
+```{js}
+$(function() {
+  $(".level2").css('visibility', 'hidden');
+  $(".level2").first().css('visibility', 'visible');
+  $(".container-fluid").height($(".container-fluid").height() + 300);
+  $(window).on('scroll', function() {
+    $('h2').each(function() {
+      var h2Top = $(this).offset().top - $(window).scrollTop();
+      var windowHeight = $(window).height();
+      if (h2Top >= 0 && h2Top <= windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'visible');
+      } else if (h2Top > windowHeight / 2) {
+        $(this).parent('div').css('visibility', 'hidden');
+      }
+    });
+  });
+})
+```
+
+```{css}
+.figcaption {display: none}
+```
+
+ 
+![Image of lapptop with Youtube incon on white bed ](https://images.unsplash.com/photo-1646446947608-5f3b5bbbcd84?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)
+
+
+This visual data story explores how users who are logged out of their YouTube accounts experience advertisements. Specifically, it examines what types of ads YouTube targets to a general audience, which demographics are being reached, and how the platform could improve ad targeting for non logged in users.
+
+## Understanding YouTube’s Ad Strategy for Non Logged In User
+
+![A black and white cat dancing](plot1.png)
+I was curious about the types of ads most commonly shown to users who are logged out of their accounts. As the plot above shows, the majority of these ads were related to technology. I recall seeing many software-related ads, such as Grammarly. This aligns with YouTube’s predominantly younger demographic, many of whom are students in school or university through to their early 30s. This age group also tends to be more tech-savvy, which makes technology-focused advertisements a logical and effective choice for broad targeting.
+
+## When Time of Day Are Users Most Receptive?
+
+![A tabby cat dancing](plot2.png)
+I used a ```geom_violin()``` plot to explore which time of day tends to receive higher ad reaction ratings (with 0 being "very annoying", 2 "neutral", and 4 "very enjoyable"). The results suggest that users in the morning are more likely to rate ads more positively, as the morning violin is widest between ratings 2 and 4. In contrast, the afternoon and night distributions are narrower and show lower concentrations in the higher rating range. This indicates a generally less favorable reaction during those times. According to [onadvertising](https://onadvertising.com/best-time-day-video-advertising/#:~:text=Additionally%2C%20consumers%20may%20be%20more%20likely%20to%20be%20relaxed%20and%20engaged%20with%20their%20tablets%20in%20the%20morning%2C%20making%20them%20more%20receptive%20to%20video%20advertising%20messages.), consumers are often more relaxed in the morning, which could explain why they respond more positively to ads during that period.
+
+## Which Types of Ads Do Users Rate the Highest?
+
+![Five kittens head banging](plot3.png)
+Finally, I examined which types of ads YouTube should prioritize by analyzing the top 10 highest-rated ads. These were evenly distributed across three categories: education, entertainment, and technology. This aligns with the idea that YouTube’s primarily young audience tends to engage more with content in these areas, as also indicated in the first plot.
+
+# To Conclude
+
+Based on the visualizations, it appears that YouTube should continue targeting ads within the technology category, but also include education and entertainment-related content such as ads for gaming consoles, trusted software, and online courses. According to [oberlo](https://www.oberlo.com/statistics/youtube-age-demographics), the platform’s largest user demographic is between the ages of 25 and 34. Additionally, targeting these ads in the morning may be most effective, as users tend to be more positive and receptive at that time, increasing the likelihood they’ll watch the full ad or click on it . Consequntly, this generates more profit for advertisers and the platform.
+
+
